@@ -1,0 +1,22 @@
+# Ignore backend node_modules and env files
+back_end/node_modules/
+back_end/.env
+back_end/package-lock.json
+
+# Ignore frontend node_modules (but keep its own .gitignore)
+front_end/node_modules/
+front_end/.expo/
+front_end/.expo-shared/
+front_end/web-build/
+front_end/*.expo
+front_end/package-lock.json
+front_end/.env
+
+# OS & IDE-specific files
+.vscode/
+.DS_Store
+.idea/
+
+# Logs
+*.log
+*.log.*
