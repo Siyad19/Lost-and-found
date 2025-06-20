@@ -7,6 +7,7 @@ const chatRoutes = require('./routes/chat');
 const messageRoutes = require('./routes/message');
 const locationRoutes = require('./routes/user_location');
 const authRoutes = require('./routes/auth'); // Import auth routes
+const userRoutes = require("./routes/Users");
 
 // Load environment variables
 dotenv.config();
@@ -31,7 +32,7 @@ app.use('/api/items', itemsRoute);
 app.use('/api/chats', chatRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/location', locationRoutes);
-
+app.use("/api/Users", userRoutes);
 
 // Start Server (Moved to the Bottom)
 const PORT = process.env.PORT || 5000;
