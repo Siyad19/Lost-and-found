@@ -1,6 +1,6 @@
 const Item = require('../models/Item');
 const matchImages = require('../utils/imageMatching');
-const admin = require("../config/firebase");
+// const admin = require("../config/firebase");
 const User = require("../models/User");
 
 // Helper function: Check if user owns the item
