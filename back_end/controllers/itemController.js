@@ -134,7 +134,7 @@ const verifyReturn = async (req, res) => {
       },
     };
 
-    await admin.messaging().send(message);
+    // await admin.messaging().send(message);
     res.json({ success: true, message: "Item verified and returned! Owner has been notified." });
 
   } catch (error) {

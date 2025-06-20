@@ -14,7 +14,7 @@ const Item = require('../models/Item');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const User = require('../models/User');
-const sendNotification = require("../utils/notifications");
+// const sendNotification = require("../utils/notifications");
 
 
 // POST /api/items - Add new item
@@ -199,33 +199,33 @@ router.post('/verify-return',authMiddleware, verifyReturn);
 // vision-api-siyad1911@durable-destiny-451005-s1.iam.gserviceaccount.com
 
 // for notifications
-router.post("/mark-returned", async (req, res) => {
-  const { itemId, ownerId } = req.body;
+// router.post("/mark-returned", async (req, res) => {
+//   const { itemId, ownerId } = req.body;
 
-  if (!itemId || !ownerId) {
-    return res.status(400).json({ error: "Item ID and Owner ID are required" });
-  }
+//   if (!itemId || !ownerId) {
+//     return res.status(400).json({ error: "Item ID and Owner ID are required" });
+//   }
 
-  try {
-    const item = await Item.findById(itemId);
-    if (!item) return res.status(404).json({ error: "Item not found" });
+//   try {
+//     const item = await Item.findById(itemId);
+//     if (!item) return res.status(404).json({ error: "Item not found" });
 
-    // Mark item as returned
-    item.status = "returned";
-    await item.save();
+//     // Mark item as returned
+//     item.status = "returned";
+//     await item.save();
 
-    // Get owner's device token
-    const owner = await User.findById(ownerId);
-    if (!owner || !owner.deviceToken) return res.json({ message: "Owner notified, but no device token found" });
+//     // Get owner's device token
+//     const owner = await User.findById(ownerId);
+//     if (!owner || !owner.deviceToken) return res.json({ message: "Owner notified, but no device token found" });
 
-    // Send notification to the owner
-    sendNotification(owner.deviceToken, "Item Returned!", `Your item "${item.title}" has been returned!`);
+//     // Send notification to the owner
+//     sendNotification(owner.deviceToken, "Item Returned!", `Your item "${item.title}" has been returned!`);
 
-    res.json({ message: "Item marked as returned and owner notified" });
-  } catch (error) {
-    res.status(500).json({ error: "Error updating item status" });
-  }
-});
+//     res.json({ message: "Item marked as returned and owner notified" });
+//   } catch (error) {
+//     res.status(500).json({ error: "Error updating item status" });
+//   }
+// });
 
 router.get("/category/:category", async (req, res) => {
   try {
