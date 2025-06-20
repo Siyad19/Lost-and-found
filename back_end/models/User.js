@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema({
   },
 
   // Reset Password Fields
-  resetPasswordToken: { type: String }, // Store the reset token
+  resetPasswordOtp: { type: String }, // Store the reset token
   resetPasswordExpires: { type: Number }, // Store expiry timestamp
 
 }, { timestamps: true });

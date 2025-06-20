@@ -38,16 +38,25 @@ const getOrCreateChat = async (req, res) => {
 
 // Get all chats for the logged-in user
 const getUserChats = async (req, res) => {
-    try {
-        const chats = await Chat.find({
-            participants: req.user.id
-        }).populate('participants', 'username');
+  try {
+      const chats = await Chat.find({ participants: req.user.id })
+          .populate('participants', 'username');
 
-        res.json(chats);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+      // Exclude the logged-in user from participants
+      const formattedChats = chats.map(chat => {
+          const otherUser = chat.participants.find(p => p._id.toString() !== req.user.id);
+          return {
+              _id: chat._id,
+              username: otherUser ? otherUser.username : "Unknown",
+          };
+      });
+
+      res.json(formattedChats);
+  } catch (err) {
+      res.status(500).json({ error: err.message });
+  }
 };
+
 
 module.exports = {
     getOrCreateChat,

@@ -54,26 +54,39 @@ router.get("/recently-found", async (req, res) => {
       return res.status(400).json({ error: "Latitude and longitude are required" });
     }
 
-    // Convert values to numbers
     const latitude = parseFloat(lat);
     const longitude = parseFloat(lng);
     const searchRadius = radius ? parseInt(radius) : 5000; // Default: 5km
 
+    // Ensure the query only fetches items with valid coordinates
     const foundItems = await Item.find({
       status: "found",
+      "location.coordinates": { $exists: true, $not: { $size: 0 } }, // Ensure coordinates exist
       location: {
         $near: {
           $geometry: { type: "Point", coordinates: [longitude, latitude] },
           $maxDistance: searchRadius // Distance in meters
         }
       }
-    }).sort({ createdAt: -1 }); // Sort by newest first
+    }).sort({ createdAt: -1 });
 
     res.status(200).json(foundItems);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
+// GET /api/items/my-posts - Get posts uploaded by the logged-in user
+router.get('/my-posts', authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.id || req.user._id; // depends on how your JWT is structured
+    const items = await Item.find({ user: userId }).populate('user', 'username');
+    res.status(200).json(items);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch user items', details: err.message });
+  }
+});
+
 
 
 // GET /api/items/:id - Get item by ID
@@ -233,6 +246,17 @@ router.get("/category/:category", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+
+// routes/items.js
+router.get('/get/items/user/:userId', async (req, res) => {
+  try {
+    const items = await Item.find({ user: req.params.userId });
+    res.json(items);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch user items' });
+  }
+});
+
 
 
 

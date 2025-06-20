@@ -32,6 +32,7 @@ app.use('/api/chats', chatRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/location', locationRoutes);
 
+
 // Start Server (Moved to the Bottom)
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
