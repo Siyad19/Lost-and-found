@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { 
-  addItem, 
-  getAllItems, 
-  getItemById, 
-  updateItemStatus, 
+const {
+  addItem,
+  getAllItems,
+  getItemById,
+  updateItemStatus,
   deleteItem,
   verifyReturn,
-  
+
 } = require('../controllers/itemController');
 const authMiddleware = require('../middleware/authMiddleware');
 const Item = require('../models/Item');
@@ -23,25 +23,25 @@ router.post('/', authMiddleware, addItem);
 // GET /api/items - Get all items
 router.get('/', getAllItems);
 
-  // Search Items by Title or Location
-  router.get('/search', async (req, res) => {
-    try {
-      const { title, location } = req.query;
-      const query = {};
-  
-      if (title) {
-        query.title = { $regex: title, $options: 'i' }; // Case insensitive
-      }
-      if (location) {
-        query.location = { $regex: location, $options: 'i' }; // Case insensitive
-      }
-  
-      const items = await Item.find(query).populate('user', 'username');
-      res.json(items);
-    } catch (err) {
-      res.status(500).json({ error: err.message });
+// Search Items by Title or Location
+router.get('/search', async (req, res) => {
+  try {
+    const { title, location } = req.query;
+    const query = {};
+
+    if (title) {
+      query.title = { $regex: title, $options: 'i' }; // Case insensitive
     }
-  });
+    if (location) {
+      query.location = { $regex: location, $options: 'i' }; // Case insensitive
+    }
+
+    const items = await Item.find(query).populate('user', 'username');
+    res.json(items);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // GET /api/items/recently-found
 // @route   GET /api/items/recently-found?userId=...
@@ -87,6 +87,20 @@ router.get('/my-posts', authMiddleware, async (req, res) => {
   }
 });
 
+// GET /api/items/latest - Latest 10 items
+router.get('/latest', async (req, res) => {
+  try {
+    const items = await Item.find()
+      .sort({ date: -1 })              // Sort by newest
+      .limit(10)                       // Only latest 10
+      .populate('user', 'username');  // Only show username
+
+    res.json(items);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 
 // GET /api/items/:id - Get item by ID
@@ -100,102 +114,102 @@ router.delete('/:id', authMiddleware, deleteItem);
 
 // GET /api/items - Get all items
 router.get('/', async (req, res) => {
-    try {
-      // Fetch all items and populate user details (only username)
-      const items = await Item.find().populate('user', 'username');
-      res.json(items);
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
-  });
+  try {
+    // Fetch all items and populate user details (only username)
+    const items = await Item.find().populate('user', 'username');
+    res.json(items);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // GET /api/items/:id - Get item by ID
 router.get('/:id', async (req, res) => {
-    try {
-      // Find item by ID and populate user details (only username)
-      const item = await Item.findById(req.params.id).populate('user', 'username');
-      if (!item) {
-        return res.status(404).json({ error: 'Item not found' });
-      }
-      res.json(item);
-    } catch (err) {
-      res.status(500).json({ error: err.message });
+  try {
+    // Find item by ID and populate user details (only username)
+    const item = await Item.findById(req.params.id).populate('user', 'username');
+    if (!item) {
+      return res.status(404).json({ error: 'Item not found' });
     }
-  });
+    res.json(item);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 //Get item by category api/items?category=${category} 
-  router.get('/', async (req, res) => {
-    try {
-        const { category } = req.query; // Get category from query params
+router.get('/', async (req, res) => {
+  try {
+    const { category } = req.query; // Get category from query params
 
-        let filter = {};
-        if (category) {
-            filter.category = category; // Filter items based on category
-        }
-
-        const items = await Item.find(filter);
-        res.json(items);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+    let filter = {};
+    if (category) {
+      filter.category = category; // Filter items based on category
     }
+
+    const items = await Item.find(filter);
+    res.json(items);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 
 // PUT /api/items/:id - Update item status
 router.put('/:id', authMiddleware, async (req, res) => {
-    try {
-      // Find the item by ID
-      const item = await Item.findById(req.params.id);
-  
-      // Check if the item exists
-      if (!item) {
-        return res.status(404).json({ error: 'Item not found' });
-      }
-  
-      // Check if the logged-in user is the owner of the item
-      if (item.user.toString() !== req.user.id) {
-        return res.status(401).json({ error: 'Unauthorized' });
-      }
-  
-      // Update item status
-      item.status = req.body.status || item.status;
-  
-      // Save the updated item
-      const updatedItem = await item.save();
-      res.json(updatedItem);
-    } catch (err) {
-      res.status(500).json({ error: err.message });
+  try {
+    // Find the item by ID
+    const item = await Item.findById(req.params.id);
+
+    // Check if the item exists
+    if (!item) {
+      return res.status(404).json({ error: 'Item not found' });
     }
-  });
-  
+
+    // Check if the logged-in user is the owner of the item
+    if (item.user.toString() !== req.user.id) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    // Update item status
+    item.status = req.body.status || item.status;
+
+    // Save the updated item
+    const updatedItem = await item.save();
+    res.json(updatedItem);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // DELETE /api/items/:id - Delete item
 router.delete('/:id', authMiddleware, async (req, res) => {
-    try {
-      // Find the item by ID
-      const item = await Item.findById(req.params.id);
-  
-      // Check if the item exists
-      if (!item) {
-        return res.status(404).json({ error: 'Item not found' });
-      }
-  
-      // Check if the logged-in user is the owner of the item
-      if (item.user.toString() !== req.user.id) {
-        return res.status(401).json({ error: 'Unauthorized' });
-      }
-  
-      // Delete the item
-      await item.deleteOne();
-      res.json({ message: 'Item deleted' });
-    } catch (err) {
-      res.status(500).json({ error: err.message });
+  try {
+    // Find the item by ID
+    const item = await Item.findById(req.params.id);
+
+    // Check if the item exists
+    if (!item) {
+      return res.status(404).json({ error: 'Item not found' });
     }
-  });
+
+    // Check if the logged-in user is the owner of the item
+    if (item.user.toString() !== req.user.id) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    // Delete the item
+    await item.deleteOne();
+    res.json({ message: 'Item deleted' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // Verifying item return using AI-based image matching
 // POST /api/items/verify - Verify returned item with image matching
 
-router.post('/verify-return',authMiddleware, verifyReturn);
+router.post('/verify-return', authMiddleware, verifyReturn);
 // vision-api-siyad1911@durable-destiny-451005-s1.iam.gserviceaccount.com
 
 // for notifications
