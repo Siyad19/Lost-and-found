@@ -277,7 +277,14 @@ router.put('/:id/toggle-return', async (req, res) => {
     const item = await Item.findById(req.params.id);
     if (!item) return res.status(404).json({ error: 'Item not found' });
 
-    item.status = item.status === 'returned' ? 'found' : 'returned';
+    // Toggle logic: returned ↔ original status
+    if (item.status === 'returned') {
+      // If it was returned, restore it to lost or found based on original type
+      item.status = item.type === 'found' ? 'found' : 'lost'; // assumes you have a 'type' field
+    } else {
+      item.status = 'returned';
+    }
+
     await item.save();
     res.json(item);
   } catch (err) {
