@@ -271,6 +271,21 @@ router.get('/get/items/user/:userId', async (req, res) => {
   }
 });
 
+// PUT /api/items/:id/toggle-return
+router.put('/:id/toggle-return', async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) return res.status(404).json({ error: 'Item not found' });
+
+    item.status = item.status === 'returned' ? 'found' : 'returned';
+    await item.save();
+    res.json(item);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 
 
 
