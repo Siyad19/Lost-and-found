@@ -9,6 +9,7 @@ const itemSchema = new mongoose.Schema({
   },
   imageUrl: { type: String, default: '' },
   status: { type: String, enum: ['lost', 'found', 'returned'], default: 'lost' },
+  originalStatus: { type: String, enum: ['lost', 'found'], }, 
   category: { type: String, required: true }, // ✅ Category is required (no default)
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   date: { type: Date, default: Date.now }
