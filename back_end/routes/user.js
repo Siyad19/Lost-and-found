@@ -7,17 +7,14 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 // 🔐 Protected route to update profile
 router.put('/update-profile', authMiddleware, async (req, res) => {
-  const userId = req.user.id; // from JWT
-  const { email, password } = req.body;
+  const userId = req.user.id;
+  const { username, email, mobileNumber } = req.body;
 
   try {
     const updateFields = {};
-
+    if (username) updateFields.username = username;
     if (email) updateFields.email = email;
-    if (password) {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      updateFields.password = hashedPassword;
-    }
+    if (mobileNumber) updateFields.mobileNumber = mobileNumber;
 
     const updatedUser = await User.findByIdAndUpdate(userId, updateFields, {
       new: true,
@@ -27,13 +24,16 @@ router.put('/update-profile', authMiddleware, async (req, res) => {
       message: 'Profile updated successfully',
       user: {
         id: updatedUser._id,
+        username: updatedUser.username,
         email: updatedUser.email,
+        mobileNumber: updatedUser.mobileNumber,
       },
     });
   } catch (err) {
     res.status(500).json({ error: 'Failed to update profile' });
   }
 });
+
 
 // 👤 Public route: Get profile by user ID
 router.get('/profile/:id', async (req, res) => {
