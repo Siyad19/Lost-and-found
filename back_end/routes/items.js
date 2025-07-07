@@ -56,25 +56,33 @@ router.get("/recently-found", async (req, res) => {
 
     const latitude = parseFloat(lat);
     const longitude = parseFloat(lng);
-    const searchRadius = radius ? parseInt(radius) : 5000; // Default: 5km
+    const searchRadius = radius ? parseInt(radius) : 5000; // Default: 5 km
 
-    // Ensure the query only fetches items with valid coordinates
+    if (isNaN(latitude) || isNaN(longitude)) {
+      return res.status(400).json({ error: "Invalid latitude or longitude" });
+    }
+
+    // Fetch recently found items nearby
     const foundItems = await Item.find({
       status: "found",
-      "location.coordinates": { $exists: true, $not: { $size: 0 } }, // Ensure coordinates exist
       location: {
         $near: {
-          $geometry: { type: "Point", coordinates: [longitude, latitude] },
-          $maxDistance: searchRadius // Distance in meters
+          $geometry: {
+            type: "Point",
+            coordinates: [longitude, latitude]  // IMPORTANT: [lng, lat]
+          },
+          $maxDistance: searchRadius
         }
       }
-    }).sort({ createdAt: -1 });
+    }).sort({ date: -1 }); // Using your `date` field
 
     res.status(200).json(foundItems);
   } catch (err) {
+    console.error("Error in /recently-found:", err);
     res.status(500).json({ error: err.message });
   }
 });
+
 
 // GET /api/items/my-posts - Get posts uploaded by the logged-in user
 router.get('/my-posts', authMiddleware, async (req, res) => {
