@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true },
   mobileNumber: { type: String, required: true },
   fcmToken: { type: String }, // Store the FCM token
-
+  savedItems: [{ type: mongoose.Schema.Types.ObjectId, ref: "Item" }],
   location: {
     type: { type: String, enum: ['Point'], default: 'Point' },
     coordinates: { type: [Number], default: [0, 0] }, // [longitude, latitude]
