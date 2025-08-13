@@ -8,7 +8,7 @@ const messageRoutes = require('./routes/message');
 const locationRoutes = require('./routes/user_location');
 const authRoutes = require('./routes/auth'); // Import auth routes
 const userRoutes = require("./routes/user");
-const savedItemsRoutes = require("./routes/savedItems")
+const savedItemsRoutes = require("./routes/savedItems");
 
 // Load environment variables
 dotenv.config();
