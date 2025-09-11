@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "Lost and found",
+    "slug": "",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "deeplinks": [
+      "myapp://"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yourapp.name"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/logoDark.png",
+        "backgroundColor": "#000000"
+      },
+      "package": "com.yourapp.name",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/logoDark.png"
+    },
+    "plugins": [
+      "expo-font"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "e03f966c-86fa-427a-85ea-8a2dcfc74f19"
+      }
+    }
+  }
+}
