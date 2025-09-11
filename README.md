@@ -34,10 +34,10 @@ Backend hosting: Render
 
 ## Screenshots
 <img src="./Screenshots/Splash-screen.png" width="250" /> <img src="./Screenshots/Get-started-screen.png" width="250" /> <img src="./Screenshots/Login-screen.png" width="250" />
-<img src="./Screenshots/Signup-screen.png" width="250" /><img src="./Screenshots/Get-location-screen.png" width="250" /><img src="./Screenshots/Home-screen.png" width="250" />
-<img src="./Screenshots/Search-screen.png" width="250" /><img src="./Screenshots/Search-screen2.png" width="250" /><img src="./Screenshots/Lost-screen.png" width="250" />
-<img src="./Screenshots/Found-screen.png" width="250" /><img src="./Screenshots/Add-post-screen.png" width="250" /><img src="./Screenshots/Chats-list-screen.png" width="250" />
-<img src="./Screenshots/Profile-screen.png" width="250" /><img src="./Screenshots/Item-screen.png" width="250" /><img src="./Screenshots/Your-posts-screen.png" width="250" />
+<img src="./Screenshots/Signup-screen.png" width="250" /> <img src="./Screenshots/Get-location-screen.png" width="250" /> <img src="./Screenshots/Home-screen.png" width="250" />
+<img src="./Screenshots/Search-screen.png" width="250" /> <img src="./Screenshots/Search-screen2.png" width="250" /> <img src="./Screenshots/Lost-screen.png" width="250" />
+<img src="./Screenshots/Found-screen.png" width="250" /> <img src="./Screenshots/Add-post-screen.png" width="250" /> <img src="./Screenshots/Chats-list-screen.png" width="250" />
+<img src="./Screenshots/Profile-screen.png" width="250" /> <img src="./Screenshots/Item-screen.png" width="250" /> <img src="./Screenshots/Your-posts-screen.png" width="250" />
 <img src="./Screenshots/Saved-items-screen.png" width="250" />
 
 
