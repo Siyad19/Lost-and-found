@@ -1,5 +1,4 @@
 import { StyleSheet } from "react-native";
-import { SlideInDown } from "react-native-reanimated";
 import { widthPercentageToDP as widthScale, heightPercentageToDP as heightScale } from 'react-native-responsive-screen';
 
 const styles = StyleSheet.create({

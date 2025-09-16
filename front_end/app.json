@@ -1,18 +1,17 @@
 {
   "expo": {
     "name": "Lost and found",
-    "slug": "",
+    "slug": "lostandfound",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
-    "deeplinks": [
-      "myapp://"
-    ],
+    
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.yourapp.name"
+      
     },
     "android": {
       "adaptiveIcon": {

@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import { widthPercentageToDP as widthScale, heightPercentageToDP as heightScale } from 'react-native-responsive-screen';
-import { Button } from "react-native-web";
+
 
 const styles = StyleSheet.create({
    container: {

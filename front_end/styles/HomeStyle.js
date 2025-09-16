@@ -209,6 +209,11 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 4,
         
+    },
+    locationText:{
+        color:'#fff',
+        fontWeight:500,
+        marginLeft:widthScale('1%')
     }
 
 

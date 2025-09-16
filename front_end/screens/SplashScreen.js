@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { View, StyleSheet,Image } from 'react-native';
+import { View, StyleSheet,Image, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Video from "react-native-video";
+
 
 const SplashScreen = () => {
 
@@ -26,6 +26,7 @@ const SplashScreen = () => {
     return (
         <View style={styles.container}>
             <Image source={require('../assets/logoDark.png')} style={styles.image}/>
+            <Text>Lost it? Found it!</Text>
         </View>
     )
 }

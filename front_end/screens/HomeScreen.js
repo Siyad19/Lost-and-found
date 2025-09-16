@@ -10,6 +10,7 @@ import { LocationContext } from "../context/LocationContext";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API_BASE_URL from '../config.js';
 import { useFocusEffect } from '@react-navigation/native';
+import * as Location from "expo-location";
 
 export default function HomeScreen({ navigation }) {
 
@@ -19,20 +20,20 @@ export default function HomeScreen({ navigation }) {
   const { userLocation } = useContext(LocationContext);
   const [username, setUsername] = useState('');
   const { width } = Dimensions.get("window");
+  const [placeName, setPlaceName] = useState("");
 
+  useFocusEffect(
+    useCallback(() => {
+      const loadUserData = async () => {
+        const storedUsername = await AsyncStorage.getItem('username');
+        if (storedUsername) {
+          setUsername(storedUsername);
+        }
+      };
 
- useFocusEffect(
-  useCallback(() => {
-    const loadUserData = async () => {
-      const storedUsername = await AsyncStorage.getItem('username');
-      if (storedUsername) {
-        setUsername(storedUsername);
-      }
-    };
-
-    loadUserData();
-  }, []) // re-run when screen is focused
-);
+      loadUserData();
+    }, []) // re-run when screen is focused
+  );
 
   useEffect(() => {
     const fetchLatestItems = async () => {
@@ -53,6 +54,22 @@ export default function HomeScreen({ navigation }) {
     fetchLatestItems();
   }, []);
   // 
+  useEffect(() => {
+    const getPlaceName = async () => {
+      // Your coordinates
+      const coords = { latitude: 10.60648950027181, longitude: 76.60388474063909 };
+
+      // Reverse geocode
+      let result = await Location.reverseGeocodeAsync(coords);
+
+      if (result.length > 0) {
+        let loc = result[0];
+        setPlaceName(`${loc.city}, ${loc.region}, ${loc.country}`);
+      }
+    };
+
+    getPlaceName();
+  }, []);
 
   useEffect(() => {
     console.log("HomeScreen sees location:", userLocation);
@@ -80,13 +97,13 @@ export default function HomeScreen({ navigation }) {
   }
 
   if (loading) {
-    return <ActivityIndicator size="large"  style={{flex:1, backgroundColor: '#000'}} />;
+    return <ActivityIndicator size="large" style={{ flex: 1, backgroundColor: '#000' }} />;
   }
 
-  const statusColor = (status) =>{
-    switch(status){
+  const statusColor = (status) => {
+    switch (status) {
       case 'lost': return '#FF3F33';
-      case 'found' : return '#FFD95F';
+      case 'found': return '#FFD95F';
       case 'returned': return '#78C841';
       default: return '#fff';
     }
@@ -94,13 +111,13 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style='light'/>
+      <StatusBar style='light' />
       {/* Header Section */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate('ChooseLocation')}>
-          <Ionicons name="location-sharp" style={styles.headerIcons} />
+        <TouchableOpacity onPress={() => navigation.navigate('ChooseLocation')} style={{ flexDirection: 'row' }}>
+          <Ionicons name="location-sharp" style={styles.headerIcons} /><View style={{justifyContent:'center'}}><Text style={styles.locationText}>{placeName ? placeName : "Loading..."}</Text></View>
         </TouchableOpacity>
-        <Text style={styles.titleText}>Home</Text>
+        {/* <Text style={styles.titleText}>Home</Text> */}
         <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
           <Ionicons name="notifications" style={styles.headerIcons} />
         </TouchableOpacity>
@@ -110,14 +127,14 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.itemContainer}>
         <View style={styles.greeting}>
           <Text style={styles.titleText}>Hello, {username} 👋</Text>
-          <Text style={{color:'#fff'}} >Welcome to Lost and Found app</Text>
+          <Text style={{ color: '#fff' }} >Welcome to Lost and Found app</Text>
         </View>
 
         {/* Recently Found Items Swiper */}
         <View style={styles.swiper}>
           <Text style={styles.subText}>Recently found items near by you</Text>
           {items.length > 0 ? (
-            <Swiper autoplay autoplayTimeout={3} showsPagination dotColor="#7F8CAA" dotStyle={{width:15, height:6}} activeDotStyle={{width:30, height:6}}>
+            <Swiper autoplay autoplayTimeout={3} showsPagination dotColor="#7F8CAA" dotStyle={{ width: 15, height: 6 }} activeDotStyle={{ width: 30, height: 6 }}>
               {items.map((item) => {
                 // Extract and format date (YYYY-MM-DD)
                 const Date = item.date ? item.date.split("T")[0] : "Unknown Date";
@@ -139,8 +156,8 @@ export default function HomeScreen({ navigation }) {
             </Swiper>
           ) : (
             <View>
-            {/* <Text style={styles.noItemsText}>No recently found items nearby</Text> */}
-            <Image source={require('../assets/noitemfound.png')} style={styles.noRecentFound} resizeMode="contain"/>
+              {/* <Text style={styles.noItemsText}>No recently found items nearby</Text> */}
+              <Image source={require('../assets/noitemfound.png')} style={styles.noRecentFound} resizeMode="contain" />
             </View>
           )}
         </View>
@@ -162,19 +179,19 @@ export default function HomeScreen({ navigation }) {
                   onPress={() => navigation.navigate("Item", { itemId: item._id })}
                 >
                   <View>
-                    <Image source={{ uri: item.imageUrl }} style={styles.imageOnPost} /> 
+                    <Image source={{ uri: item.imageUrl }} style={styles.imageOnPost} />
                   </View>
                   <View style={styles.itemInfo}>
                     <Text style={styles.itemText}>{item.title}</Text>
-                    <Text style={{color:'#fff'}}>
+                    <Text style={{ color: '#fff' }}>
                       {item.description.length > 25
                         ? item.description.substring(0, 25) + "..."
                         : item.description}
                     </Text>
-                    <Text style={{color:'#fff'}}>Found On: {item.date?.split("T")[0]}</Text>
+                    <Text style={{ color: '#fff' }}>Found On: {item.date?.split("T")[0]}</Text>
                   </View>
                   <View style={styles.statusContainer}>
-                      <Text style={[styles.statusText, {color : statusColor(item.status)}]}>{item.status}</Text>
+                    <Text style={[styles.statusText, { color: statusColor(item.status) }]}>{item.status}</Text>
                   </View>
                 </TouchableOpacity>
               )}
